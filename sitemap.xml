@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://mainameiz.com/2015/10/10/modifikatory-dostupa-ruby</loc>
+    <lastmod>2015-10-10T23:47:12+03:00</lastmod>
+  </url>
+  <url>
+    <loc>http://mainameiz.com/2015/07/12/rails-plus-webpack</loc>
+    <lastmod>2015-07-12T15:51:17+03:00</lastmod>
+  </url>
+  <url>
+    <loc>http://mainameiz.com/2015/03/29/integrated-test-are-a-scam</loc>
+    <lastmod>2015-03-29T15:11:10+03:00</lastmod>
+  </url>
+  <url>
+    <loc>http://mainameiz.com/2014/11/04/tdd-the-most-successful-software-diet</loc>
+    <lastmod>2014-11-04T00:33:34+03:00</lastmod>
+  </url>
+  <url>
+    <loc>http://mainameiz.com/about/</loc>
+  </url>
+  <url>
+    <loc>http://mainameiz.com/</loc>
+  </url>
+</urlset>

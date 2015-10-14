@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Your awesome title</title>
+    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</description>
+    <link>http://mainameiz.com/</link>
+    <atom:link href="http://mainameiz.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 14 Oct 2015 03:02:52 +0300</pubDate>
+    <lastBuildDate>Wed, 14 Oct 2015 03:02:52 +0300</lastBuildDate>
+    <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Модификаторы доступа в ruby</title>
+        <description>&lt;p&gt;Для меня было сюрпризом узнать, что модификаторы доступа (public, private, protected)
+в Ruby отличаются от привычных мне, которые используются в языках вроде C++, C# и Java.
+Также, я почти никогда не встречал использования модификатора protected в ruby-коде.
+Если вы хотите узнать как же все таки работают модификаторы доступа в Ruby то прошу под кат.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+
+&lt;h2&gt;Public&lt;/h2&gt;
+
+&lt;p&gt;Методы класса доступны везде и всем.&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;8&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;9&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;10&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;11&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;12&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Foo&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;public&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;public_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;public_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Foo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;public_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;#39;public_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Модификатор public работает по умолчанию для всех методов.&lt;/p&gt;
+
+&lt;h2&gt;Private&lt;/h2&gt;
+
+&lt;p&gt;Методы класса доступны только внутри объекта. При наследовании от базового класса (Foo)
+private-методы также доступны и в объектах-наследниках.&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;8&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;9&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;10&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;11&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;12&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;13&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;14&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;15&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;16&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;17&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;18&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;19&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;20&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;21&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;22&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;23&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;24&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Foo&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;public&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;public_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;public_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;n&quot;&gt;private_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;private_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;private_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Foo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;private_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; test.rb:31:in `&amp;lt;main&amp;gt;&amp;#39;: private method `private_method&amp;#39; called for #&amp;lt;Foo:0x007fcff3da84d0&amp;gt; (NoMethodError)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# прямой доступ запрещен, но закрытый метод можно вызвать через другой public-метод&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;public_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;#39;public_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;#39;private_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Protected&lt;/h2&gt;
+
+&lt;p&gt;Методы класса доступны только в контексте этого класса или его подклассов.&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;8&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;9&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;10&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;11&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;12&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;13&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;14&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;15&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;16&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;17&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;18&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;19&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;20&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;21&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;22&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;23&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;24&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;25&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;26&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;27&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;28&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;29&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;30&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;31&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;32&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;33&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Foo&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;public&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;public_method_with_protected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;public_method_with_protected&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;n&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;protected_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;public_method_with_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;public_method_with_private&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;n&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;private_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;protected&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;protected_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;protected_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;private_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;private_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Foo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Foo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;public_method_with_protected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;#39;public_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &amp;#39;protected_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Но вот так работать не будет:&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;protected_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; test.rb:35:in `&amp;lt;main&amp;gt;&amp;#39;: protected method `foo&amp;#39; called for #&amp;lt;Foo:0x007fe81ff83d60 @foo=0&amp;gt; (NoMethodError)&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Т.е. один объект может обращаться к protected-методу другого объекта, если у них общий класс.&lt;/p&gt;
+
+&lt;p&gt;Стоит отметить, что такой трюк не работает с private-методами.&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;public_method_with_private&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; test.rb:31:in `&amp;lt;main&amp;gt;&amp;#39;: private method `private_method&amp;#39; called for #&amp;lt;Foo:0x007fcff3da84d0&amp;gt; (NoMethodError)&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Я долгое время не понимал чем может быть полезен модификатор protected,
+но недавно в книжке &quot;Scala для нетерпеливых&quot; нашел достойный пример.
+Эквивалентный ему пример на ruby выглядит так:&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;8&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;9&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;10&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;11&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;12&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;13&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;14&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;15&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;16&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;17&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;18&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;19&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;20&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;21&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Foo&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;vi&quot;&gt;@value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;&amp;lt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;protected&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;value&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;vi&quot;&gt;@value&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Foo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Foo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;f1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f2&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Т.е. модификатор protected нужен для сравнения объектов по какому-то внутреннему значению, которое должно быть
+открыто только для объектов этого класса (и подклассов). Если Вы знаете еще какие-либо
+полезные способы применения данного модификатора, отпишитесь, пожалуйста, в комментах.&lt;/p&gt;
+
+&lt;h2&gt;Выводы&lt;/h2&gt;
+
+&lt;p&gt;Таким образом, модификатор public одинаковый во всех языках, private в Ruby похож на protected
+в других языках, а protected в Ruby в других языках реализуется другими способами,
+специфичными (насколько я знаю) для каждого языка.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 10 Oct 2015 23:47:12 +0300</pubDate>
+        <link>http://mainameiz.com/2015/10/10/modifikatory-dostupa-ruby</link>
+        <guid isPermaLink="true">http://mainameiz.com/2015/10/10/modifikatory-dostupa-ruby</guid>
+        
+        
+        <category>ruby</category>
+        
+        <category>development</category>
+        
+      </item>
+    
+      <item>
+        <title>Rails + Webpack</title>
+        <description>&lt;p&gt;Webpack это аналог sprockets из мира node.js.&lt;/p&gt;
+
+&lt;p&gt;Этот пост о том, почему я решил использовать его в своем проекте.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+
+&lt;p&gt;Какие плюсы и минусы я вижу по сравнению со sprockets:&lt;/p&gt;
+
+&lt;h5&gt;Плюсы:&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Управление зависимостями как с Gemfile.&lt;/p&gt;
+
+&lt;p&gt;  Больше не нужно писать и следить за обновлением gem&#39;ов-оберток для js-библиотек или хранить нужные js-библиотеки в /vendor/assets.&lt;/p&gt;
+
+&lt;p&gt;  Я использовал какое-то время &quot;bower-rails&quot; gem, который предоставлял обертки над bower&#39;ом
+  (генерировал Bowerfile из описания на ruby, rake-tasks для вызова bower, настраивал assets pipeline и т.д.).&lt;/p&gt;
+
+&lt;p&gt;  Сейчас я думаю что это костыль. Почему бы не использовать нужные инструменты напрямую?
+  Тем более сейчас все новые технологии появляются именно в мире node.js.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Есть sourcemaps&lt;/p&gt;
+
+&lt;p&gt;Чего до сих пор нет в sprockets :-(&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Hot Module Replacement&lt;/p&gt;
+
+&lt;p&gt;  Без перезагрузки страницы умеет обновлять стили и js-код (в каждом конкретном случае нужен свой плагин).&lt;/p&gt;
+
+&lt;p&gt;  Для обновления css без перезагрузки страницы в ruby тоже есть свои инструменты (guard gem),
+  но ключевым фактором для меня оказалась возможность менять на лету код react-вьюх.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Можно прописывать любые зависимости от других файлов прямо в js-файлах&lt;/p&gt;
+
+&lt;p&gt;  Допустим вы открыли в своём редакторе файл с react-вьюшками, и хотите поменять
+  некоторые стили специфичные для этих вьюх. Где вы будете их искать?
+  В &lt;code&gt;stylesheets/application.css&lt;/code&gt;? В &lt;code&gt;stylesheets/&amp;lt;some module&amp;gt;/styles.css&lt;/code&gt;?
+  По-моему указание зависимостей в том месте где эти зависимости используется
+  (пусть даже это css-файлы, шрифты, иконки или картинки)
+  является отличным решением увеличить &quot;понятность&quot; кода.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Использование AMD/CommonJS модулей&lt;/p&gt;
+
+&lt;p&gt;Главная причина, которая подтолкнула меня на использование webpack это отсутствие в rails
+возможности работать с CommonJS-модулями.
+Это избавляет от необходимости выдумывать иерархию классов для модулей сайта
+и писать каждый раз такие конструкции.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;javascript&quot;&gt;  post = new App.Posts.List.Models.Post()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&quot;javascript&quot;&gt;  post = require(&#39;app/posts/list/models&#39;).Post
+
+  post = new Post()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;При этом в самом файле который реализует модель Post тоже раньше приходилось повторять иерархию&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;  class App.Posts.List.Models.Post
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;а теперь можно писать так&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;js&quot;&gt;  class Post
+    ...
+
+  module.exports = {
+    Post: Post
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Думаю вы представляете какую боль может принести необходимость переименования такого модуля, которую
+теперь можно успешно избежать, просто переместив папку с модулем в другое место
+или сделав из него отдельный npm-пакет.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h5&gt;Минусы:&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;В npm у каждого пакета есть своя собственная папка с установленными зависимостями.&lt;/p&gt;
+
+&lt;p&gt;Например устанавливая какой-то npm-пакет в его структуре каталогов можеть появиться
+такой путь &lt;code&gt;/node_modules/&amp;lt;some mod 1&amp;gt;/node_modules/&amp;lt;some mod 2&amp;gt;/nodule_modules/...&lt;/code&gt;.
+Из-за этого в ваш bundle, который вы используете для клиентской части,
+могут попасть разные версии одной и той же библиотеки.&lt;/p&gt;
+
+&lt;p&gt;  Решения:
+      1) Можно использовать bower для библиотек которые используются только во front-end&#39;е.
+     Bower просто не сможет разрешить все зависимости, если у вас есть несовместимые версии.
+      2) Плагин webpack&#39;а &quot;dedupe&quot; для нахождения дубликатов&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h5&gt;Особенности работы:&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;По умолчанию в npm не используется shrinkwrap.&lt;/p&gt;
+
+&lt;p&gt;Это аналог Gemfile.lock в ruby, т.е. файл куда записываются конкретные версии
+пакетов которые вы используете. Отсутствие этого файла может привести к тому,
+что на разных машинах у вас будут установлены разные версии npm-пакетов,
+а следовательно можно натолкнуться на разное поведение этих билиотек на разных машинах (и даже на продакшене).&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;В следующем посте я расскажу про настройку и использование Webpack&#39;а вместе с Rails.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 12 Jul 2015 15:51:17 +0300</pubDate>
+        <link>http://mainameiz.com/2015/07/12/rails-plus-webpack</link>
+        <guid isPermaLink="true">http://mainameiz.com/2015/07/12/rails-plus-webpack</guid>
+        
+        
+        <category>rails</category>
+        
+        <category>javascript</category>
+        
+        <category>development</category>
+        
+        <category>webpack</category>
+        
+        <category>react.js</category>
+        
+      </item>
+    
+      <item>
+        <title>Integrated test are a scam</title>
+        <description>&lt;ul&gt;
+&lt;li&gt;почему наличие большого кол-ва интеграционных тестов плохо сказывается на качестве тестирования проекта.&lt;/li&gt;
+&lt;li&gt;программировании по контракту&lt;/li&gt;
+&lt;li&gt;как можно применить принцип математической индукции в тестировании.&lt;/li&gt;
+&lt;li&gt;как и когда нужно писать интеграционные тесты?&lt;/li&gt;
+&lt;li&gt;hexagonal architecture (ring architecture)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;div class=&quot;embed-video-container&quot;&gt;&lt;iframe src=&quot;//player.vimeo.com/video/80533536&quot;&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Sun, 29 Mar 2015 15:11:10 +0300</pubDate>
+        <link>http://mainameiz.com/2015/03/29/integrated-test-are-a-scam</link>
+        <guid isPermaLink="true">http://mainameiz.com/2015/03/29/integrated-test-are-a-scam</guid>
+        
+        
+        <category>video</category>
+        
+        <category>development</category>
+        
+        <category>tdd</category>
+        
+        <category>software testing</category>
+        
+      </item>
+    
+      <item>
+        <title>TDD - The most successful software diet</title>
+        <description>&lt;p&gt;Посмотрел очень интересный доклад DHH (создатель Ruby on Rails) о разработке ПО.&lt;/p&gt;
+
+&lt;p&gt;Он рассказывает о недостатках методологии TDD (за эту идею выступление можно даже назвать скандальным,
+т.к. в rails-сообществе считается, что ты очень крут, если применяешь эту методологию тестирования),
+рассуждает о том, чем же занимаются разработчики информационных систем, если не computer science
+(и рассказывает почему мы не занимаемся computer science, в отличии например от Линуса Торвальдса),
+к чему мы должны стремиться при разработке ПО и т.д. В общем абстрактные рассуждения о разработке ПО,
+но при этом очень интересные и с отличным юмором. Must see!&lt;/p&gt;
+
+&lt;div class=&quot;embed-video-container&quot;&gt;&lt;iframe src=&quot;//www.youtube.com/embed/9LfmrkyP81M&quot; allowfullscreen&gt;&lt;/iframe&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Tue, 04 Nov 2014 00:33:34 +0300</pubDate>
+        <link>http://mainameiz.com/2014/11/04/tdd-the-most-successful-software-diet</link>
+        <guid isPermaLink="true">http://mainameiz.com/2014/11/04/tdd-the-most-successful-software-diet</guid>
+        
+        
+        <category>video</category>
+        
+        <category>development</category>
+        
+        <category>tdd</category>
+        
+        <category>software testing</category>
+        
+      </item>
+    
+  </channel>
+</rss>

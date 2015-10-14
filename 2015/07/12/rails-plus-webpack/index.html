@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+
+  <title>Rails + Webpack</title>
+  <meta name="description" content="Webpack это аналог sprockets из мира node.js.Этот пост о том, почему я решил использовать его в своем проекте.">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://mainameiz.com/2015/07/12/rails-plus-webpack">
+  <link rel="alternate" type="application/rss+xml" title="Your awesome title" href="http://mainameiz.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+  <div class="wrapper">
+    <nav class="site-nav">
+
+      <div class="trigger">
+        <a class="page-link" href="/">Index</a>
+        <a class="page-link" href="/about">About</a>
+        <a class="page-link" href="/feed.xml">RSS</a>
+      </div>
+
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Rails + Webpack</h1>
+    <p class="post-meta">Jul 12, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <p>Webpack это аналог sprockets из мира node.js.</p>
+
+<p>Этот пост о том, почему я решил использовать его в своем проекте.</p>
+
+<!-- more -->
+
+
+<p>Какие плюсы и минусы я вижу по сравнению со sprockets:</p>
+
+<h5>Плюсы:</h5>
+
+<ul>
+<li><p>Управление зависимостями как с Gemfile.</p>
+
+<p>  Больше не нужно писать и следить за обновлением gem'ов-оберток для js-библиотек или хранить нужные js-библиотеки в /vendor/assets.</p>
+
+<p>  Я использовал какое-то время "bower-rails" gem, который предоставлял обертки над bower'ом
+  (генерировал Bowerfile из описания на ruby, rake-tasks для вызова bower, настраивал assets pipeline и т.д.).</p>
+
+<p>  Сейчас я думаю что это костыль. Почему бы не использовать нужные инструменты напрямую?
+  Тем более сейчас все новые технологии появляются именно в мире node.js.</p></li>
+<li><p>Есть sourcemaps</p>
+
+<p>Чего до сих пор нет в sprockets :-(</p></li>
+<li><p>Hot Module Replacement</p>
+
+<p>  Без перезагрузки страницы умеет обновлять стили и js-код (в каждом конкретном случае нужен свой плагин).</p>
+
+<p>  Для обновления css без перезагрузки страницы в ruby тоже есть свои инструменты (guard gem),
+  но ключевым фактором для меня оказалась возможность менять на лету код react-вьюх.</p></li>
+<li><p>Можно прописывать любые зависимости от других файлов прямо в js-файлах</p>
+
+<p>  Допустим вы открыли в своём редакторе файл с react-вьюшками, и хотите поменять
+  некоторые стили специфичные для этих вьюх. Где вы будете их искать?
+  В <code>stylesheets/application.css</code>? В <code>stylesheets/&lt;some module&gt;/styles.css</code>?
+  По-моему указание зависимостей в том месте где эти зависимости используется
+  (пусть даже это css-файлы, шрифты, иконки или картинки)
+  является отличным решением увеличить "понятность" кода.</p></li>
+<li><p>Использование AMD/CommonJS модулей</p>
+
+<p>Главная причина, которая подтолкнула меня на использование webpack это отсутствие в rails
+возможности работать с CommonJS-модулями.
+Это избавляет от необходимости выдумывать иерархию классов для модулей сайта
+и писать каждый раз такие конструкции.</p>
+
+<pre><code class="javascript">  post = new App.Posts.List.Models.Post()
+</code></pre>
+
+<pre><code class="javascript">  post = require('app/posts/list/models').Post
+
+  post = new Post()
+</code></pre>
+
+<p>При этом в самом файле который реализует модель Post тоже раньше приходилось повторять иерархию</p>
+
+<pre><code class="js">  class App.Posts.List.Models.Post
+    ...
+</code></pre>
+
+<p>а теперь можно писать так</p>
+
+<pre><code class="js">  class Post
+    ...
+
+  module.exports = {
+    Post: Post
+  }
+</code></pre>
+
+<p>Думаю вы представляете какую боль может принести необходимость переименования такого модуля, которую
+теперь можно успешно избежать, просто переместив папку с модулем в другое место
+или сделав из него отдельный npm-пакет.</p></li>
+</ul>
+
+
+<h5>Минусы:</h5>
+
+<ul>
+<li><p>В npm у каждого пакета есть своя собственная папка с установленными зависимостями.</p>
+
+<p>Например устанавливая какой-то npm-пакет в его структуре каталогов можеть появиться
+такой путь <code>/node_modules/&lt;some mod 1&gt;/node_modules/&lt;some mod 2&gt;/nodule_modules/...</code>.
+Из-за этого в ваш bundle, который вы используете для клиентской части,
+могут попасть разные версии одной и той же библиотеки.</p>
+
+<p>  Решения:
+      1) Можно использовать bower для библиотек которые используются только во front-end'е.
+     Bower просто не сможет разрешить все зависимости, если у вас есть несовместимые версии.
+      2) Плагин webpack'а "dedupe" для нахождения дубликатов</p></li>
+</ul>
+
+
+<h5>Особенности работы:</h5>
+
+<ul>
+<li><p>По умолчанию в npm не используется shrinkwrap.</p>
+
+<p>Это аналог Gemfile.lock в ruby, т.е. файл куда записываются конкретные версии
+пакетов которые вы используете. Отсутствие этого файла может привести к тому,
+что на разных машинах у вас будут установлены разные версии npm-пакетов,
+а следовательно можно натолкнуться на разное поведение этих билиотек на разных машинах (и даже на продакшене).</p></li>
+</ul>
+
+
+<p>В следующем посте я расскажу про настройку и использование Webpack'а вместе с Rails.</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

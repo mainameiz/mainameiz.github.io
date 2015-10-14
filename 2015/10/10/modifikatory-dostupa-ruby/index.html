@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+
+  <title>Модификаторы доступа в ruby</title>
+  <meta name="description" content="Для меня было сюрпризом узнать, что модификаторы доступа (public, private, protected)в Ruby отличаются от привычных мне, которые используются в языках вроде C &hellip;">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://mainameiz.com/2015/10/10/modifikatory-dostupa-ruby">
+  <link rel="alternate" type="application/rss+xml" title="Your awesome title" href="http://mainameiz.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+  <div class="wrapper">
+    <nav class="site-nav">
+
+      <div class="trigger">
+        <a class="page-link" href="/">Index</a>
+        <a class="page-link" href="/about">About</a>
+        <a class="page-link" href="/feed.xml">RSS</a>
+      </div>
+
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Модификаторы доступа в ruby</h1>
+    <p class="post-meta">Oct 10, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <p>Для меня было сюрпризом узнать, что модификаторы доступа (public, private, protected)
+в Ruby отличаются от привычных мне, которые используются в языках вроде C++, C# и Java.
+Также, я почти никогда не встречал использования модификатора protected в ruby-коде.
+Если вы хотите узнать как же все таки работают модификаторы доступа в Ruby то прошу под кат.</p>
+
+<!-- more -->
+
+
+<h2>Public</h2>
+
+<p>Методы класса доступны везде и всем.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Foo</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">public</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">public_method</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;public_method&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">f</span> <span class="o">=</span> <span class="no">Foo</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">public_method</span>
+</span><span class='line'><span class="c1"># =&gt; &#39;public_method&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Модификатор public работает по умолчанию для всех методов.</p>
+
+<h2>Private</h2>
+
+<p>Методы класса доступны только внутри объекта. При наследовании от базового класса (Foo)
+private-методы также доступны и в объектах-наследниках.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Foo</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">public</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">public_method</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;public_method&#39;</span>
+</span><span class='line'>    <span class="n">private_method</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">private_method</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;private_method&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">f</span> <span class="o">=</span> <span class="no">Foo</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">private_method</span>
+</span><span class='line'><span class="c1"># =&gt; test.rb:31:in `&lt;main&gt;&#39;: private method `private_method&#39; called for #&lt;Foo:0x007fcff3da84d0&gt; (NoMethodError)</span>
+</span><span class='line'><span class="c1"># прямой доступ запрещен, но закрытый метод можно вызвать через другой public-метод</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">f</span><span class="o">.</span><span class="n">public_method</span>
+</span><span class='line'><span class="c1"># =&gt; &#39;public_method&#39;</span>
+</span><span class='line'><span class="c1"># =&gt; &#39;private_method&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Protected</h2>
+
+<p>Методы класса доступны только в контексте этого класса или его подклассов.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Foo</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">public</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">public_method_with_protected</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;public_method_with_protected&#39;</span>
+</span><span class='line'>    <span class="n">other</span><span class="o">.</span><span class="n">protected_method</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">public_method_with_private</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;public_method_with_private&#39;</span>
+</span><span class='line'>    <span class="n">other</span><span class="o">.</span><span class="n">private_method</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">protected</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">protected_method</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;protected_method&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">private</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">private_method</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;private_method&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">f1</span> <span class="o">=</span> <span class="no">Foo</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">f2</span> <span class="o">=</span> <span class="no">Foo</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">f1</span><span class="o">.</span><span class="n">public_method_with_protected</span><span class="p">(</span><span class="n">f2</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; &#39;public_method&#39;</span>
+</span><span class='line'><span class="c1"># =&gt; &#39;protected_method&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Но вот так работать не будет:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">f1</span><span class="o">.</span><span class="n">protected_method</span>
+</span><span class='line'><span class="c1"># =&gt; test.rb:35:in `&lt;main&gt;&#39;: protected method `foo&#39; called for #&lt;Foo:0x007fe81ff83d60 @foo=0&gt; (NoMethodError)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Т.е. один объект может обращаться к protected-методу другого объекта, если у них общий класс.</p>
+
+<p>Стоит отметить, что такой трюк не работает с private-методами.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">f1</span><span class="o">.</span><span class="n">public_method_with_private</span><span class="p">(</span><span class="n">f2</span><span class="p">)</span>
+</span><span class='line'><span class="c1"># =&gt; test.rb:31:in `&lt;main&gt;&#39;: private method `private_method&#39; called for #&lt;Foo:0x007fcff3da84d0&gt; (NoMethodError)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Я долгое время не понимал чем может быть полезен модификатор protected,
+но недавно в книжке "Scala для нетерпеливых" нашел достойный пример.
+Эквивалентный ему пример на ruby выглядит так:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Foo</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>    <span class="vi">@value</span> <span class="o">=</span> <span class="n">value</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">&lt;=&gt;</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">protected</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">value</span>
+</span><span class='line'>    <span class="vi">@value</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">f1</span> <span class="o">=</span> <span class="no">Foo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="n">f2</span> <span class="o">=</span> <span class="no">Foo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">f1</span> <span class="o">&lt;=&gt;</span> <span class="n">f2</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Т.е. модификатор protected нужен для сравнения объектов по какому-то внутреннему значению, которое должно быть
+открыто только для объектов этого класса (и подклассов). Если Вы знаете еще какие-либо
+полезные способы применения данного модификатора, отпишитесь, пожалуйста, в комментах.</p>
+
+<h2>Выводы</h2>
+
+<p>Таким образом, модификатор public одинаковый во всех языках, private в Ruby похож на protected
+в других языках, а protected в Ruby в других языках реализуется другими способами,
+специфичными (насколько я знаю) для каждого языка.</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
