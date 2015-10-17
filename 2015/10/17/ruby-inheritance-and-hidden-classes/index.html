@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+
+  <title>Наследование в Ruby</title>
+  <meta name="description" content="Singleton-классыВ Ruby есть возможность добавлять объектам singleton-методы. Это такие методы, которыесуществуют только для одного объекта и не затрагивают &hellip;">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://mainameiz.com/2015/10/17/ruby-inheritance-and-hidden-classes">
+  <link rel="alternate" type="application/rss+xml" title="Your awesome title" href="http://mainameiz.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+  <div class="wrapper">
+    <nav class="site-nav">
+
+      <div class="trigger">
+        <a class="page-link" href="/">Index</a>
+        <a class="page-link" href="/about">About</a>
+        <a class="page-link" href="/feed.xml">RSS</a>
+      </div>
+
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Наследование в Ruby</h1>
+    <p class="post-meta">Oct 17, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <h2>Singleton-классы</h2>
+
+<p>В Ruby есть возможность добавлять объектам <em>singleton</em>-методы. Это такие методы, которые
+существуют только для одного объекта и не затрагивают другие объекты того же класса.
+Пример определения такого метода:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Foo</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">foo</span> <span class="o">=</span> <span class="no">Foo</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="k">def</span> <span class="nc">foo</span><span class="o">.</span><span class="nf">singleton_method</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="s1">&#39;singleton_method&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>В MRI это реализовано так, что в тот момент когда вы хотите создать такой метод,
+в иерархию наследования добавляется специальный класс, который называется <em>singleton</em>-класс.
+В нем-то и хранятся все методы для данного объекта. От остальных классов он отличается тем, что
+для него установлен специальный флаг, по которому его можно отличить от обычных классов.
+Например, метод <code>Object#class</code> использует этот флаг для того, чтобы пропускать все <em>singleton</em>-классы
+в иерархии наследования и в итоге вернуть вам настоящий класс, экзепляром которого и является текущий объект.
+<em>Singleton</em>-класс можно получить с помощью метода <code>Object#singleton_class</code>.</p>
+
+<p>На диаграмме наследования это можно показать так... Допустим у нас есть классическая иерархия:
+объект <code>a</code>, его класс <code>A</code> и суперкласс <code>B</code>.</p>
+
+<p><img src="/assets/ruby-singleton-class-diagram-without-singleton.png" alt="Диаграмма наследования без singleton-класса" /></p>
+
+<p>После создания <em>singleton</em>-метода, наша иерархия будет выглядеть так:</p>
+
+<p><img src="/assets/ruby-singleton-class-diagram-with-singleton.png" alt="Диаграмма наследования с singleton-классом" /></p>
+
+<p>Здесь <code>(a)</code> это <em>singleton</em>-класс. В дальнейшем я буду обозначать в скобках <em>singleton</em>-классы.</p>
+
+<p>Несколько интересных особенностей связанных с <em>singleton</em>-классами:</p>
+
+<ul>
+<li>У объектов классов <code>Fixnum</code>, <code>Float</code>, <code>Bignum</code>, <code>Symbol</code> не может быть <em>singleton</em>-классов</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class='line'><span class="k">def</span> <span class="nc">a</span><span class="o">.</span><span class="nf">lol</span><span class="p">;</span> <span class="nb">puts</span> <span class="s1">&#39;lol&#39;</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="c1"># =&gt; TypeError: can&#39;t define singleton</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Нельзя создать экземпляры <em>singleton</em>-классов</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="s2">&quot;string&quot;</span><span class="o">.</span><span class="n">singleton_class</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="c1"># =&gt; TypeError: can&#39;t create instance of singleton class</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Нельзя наследоваться от <em>singleton</em>-класса</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span> <span class="o">&lt;</span> <span class="s2">&quot;method&quot;</span><span class="o">.</span><span class="n">singleton_class</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'><span class="c1"># =&gt; TypeError: can&#39;t make subclass of singleton class</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>У объектов <code>nil</code>, <code>true</code>, <code>false</code> нет <em>singleton</em>-классов, вместо этого вызов метода
+<code>Object#singleton_class</code> возвращает классы <code>NilClass</code>, <code>TrueClass</code> и <code>FalseClass</code> соответственно.
+Что логично, ведь эти объекты существую в программе в единственном экземпляре и для них не имеет смысла создавать
+ <em>singleton</em>-классы.</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="kp">nil</span><span class="o">.</span><span class="n">singleton_class</span>
+</span><span class='line'><span class="c1"># =&gt; NilClass</span>
+</span><span class='line'><span class="kp">true</span><span class="o">.</span><span class="n">singleton_class</span>
+</span><span class='line'><span class="c1"># =&gt; TrueClass</span>
+</span><span class='line'><span class="kp">false</span><span class="o">.</span><span class="n">singleton_class</span>
+</span><span class='line'><span class="c1"># =&gt; FalseClass</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Метаклассы</h2>
+
+<p>Последствиями того, что "всё есть объект" в Ruby является то, что классы тоже являются полноправными объектами.
+А значит у них тоже можно объявлять singleton-методы. В других языках такие методы называют статичными (<em>static method</em>).
+Не знаю как в других языках, но в Ruby такие методы также как и обычные методы наследуются. Например:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">foo</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;foo&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">B</span> <span class="o">&lt;</span> <span class="n">A</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">B</span><span class="o">.</span><span class="n">foo</span> <span class="c1"># напечатает &quot;foo&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Как вы наверное уже догадались для реализации <em>static</em>-методов тоже используются <em>singleton</em>-классы.
+Но для них предусмотрена специальная логика в случаях когда они используются для добавления
+<em>static</em>-методов в обычные классы. Чтобы отличать их от обычных <em>singleton</em>-классов
+их также называют метаклассами (т.е. классами для классов).</p>
+
+<p>Для того, чтобы реализовать наследование <em>static</em>-методов, необходимо как-то объединить
+метаклассы <code>(A)</code> и <code>(B)</code> в иерархии наследования.
+И вот как эта иерархия выглядит:</p>
+
+<p><img src="/assets/ruby-metaclass-hierarchy.png" alt="Диаграмма наследования A и B" /></p>
+
+<p>На диаграмме вертикально показана иерархия наследования, а горизонтально отношение "объект <-> класс".
+Т.е. метаклассы <code>(A)</code> и <code>(B)</code> являются экземплярами класса <code>Class</code>, а классы <code>A</code> и <code>B</code> какбы являются экземплярами
+своих метаклассов  <code>(A)</code> и <code>(B)</code>. При этом, как <code>A</code> является суперклассом для <code>B</code>, так и <code>(A)</code>
+является суперклассом для <code>(B)</code>. Поэтому когда мы вызываем <em>static</em>-метод у класса <code>B</code>, то поиск идет сначала
+в таблице методов класса <code>(B)</code> и если его там нет, то в его суперклассе <code>(A)</code>.</p>
+
+<h2>Include-классы</h2>
+
+<p>Include-классы используются при добавлении модулей в классы. Они связывают между собой
+конктретный класс и методы из модуля. При этом, таблица методов модуля становится также и
+таблицей методов для <em>include</em>-класса. Из-за этого, при добавлении новых методов
+в модуль, они сразу становятся доступны и всем классам, включившим в себя этот модуль.</p>
+
+<p>Вот как такой код...</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">M</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">B</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span> <span class="o">&lt;</span> <span class="n">B</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="n">M</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>... выглядит на диаграмме:</p>
+
+<p><img src="/assets/ruby-include-class-inheritance.png" alt="Диаграмма include-класса" /></p>
+
+<p>Заслуживающей внимания особенностью также является тот факт, что если в родительский класс
+уже включен модуль (<code>M</code>), то при попытке включить этот же
+модуль (<code>M</code>) в классе-наследнике, то он <strong>не будет</strong> добавлен еще раз:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">M</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="n">M</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">B</span> <span class="o">&lt;</span> <span class="n">A</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="n">M</span> <span class="c1"># включаем второй раз в классе-наследнике</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">B</span><span class="o">.</span><span class="n">ancestors</span>
+</span><span class='line'><span class="c1"># =&gt; [B, A, M, Object, Kernel, BasicObject]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Также, если после включения модуля (<code>M</code>) в класс (<code>A</code>) вы добавили в сам модуль (<code>M</code>)
+другой модуль (<code>M2</code>), то класс (<code>A</code>) не получит новые методы:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">M</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">M2</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="n">M</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">M</span><span class="o">.</span><span class="n">include</span> <span class="no">M2</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">ancestors</span>
+</span><span class='line'><span class="c1"># =&gt; [A, M, Object, Kernel, BasicObject]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>В данном случае необходимо "пере-include-ить" все модули, чтобы изменения применились.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">include</span> <span class="n">M</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">ancestors</span>
+</span><span class='line'><span class="c1"># =&gt; [A, M, M2, Object, Kernel, BasicObject]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Это происходит из-за того, что в Ruby нет отслеживания зависимостей.</p>
+
+<p>Вот что происходит в данном случае...</p>
+
+<ol>
+<li>Мы определили класс <code>A</code> и влючили в него модуль <code>M</code></li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">M</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="n">M</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/assets/ruby-include-mod1.png" alt="Шаг 1" /></p>
+
+<ol>
+<li>Затем включили второй модуль <code>M2</code> в первый <code>M</code></li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">M</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="n">M</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">M2</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">M</span><span class="o">.</span><span class="n">include</span> <span class="no">M2</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/assets/ruby-include-mod2.png" alt="Шаг 2" /></p>
+
+<p>На данном шаге в классе <code>A</code> еще недоступны методы модуля <code>M2</code>. Чтобы они стали доступны,
+в иерархии наследования класса <code>A</code> должен появится <em>include</em>-класс, который бы связывал
+модуль <code>M2</code> с классом. Поэтому мы должны еще раз включить модуль <code>M</code> в класс, чтобы
+еще раз пройтись по всему дереву зависимостей и включить недостающие модули в иерархию наследования класса.</p>
+
+<ol>
+<li>Подключаем модуль еще раз</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">M</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="n">M</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">M2</span><span class="p">;</span> <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">M</span><span class="o">.</span><span class="n">include</span> <span class="no">M2</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">include</span> <span class="n">M</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>И получаем такую картину:</p>
+
+<p><img src="/assets/ruby-include-mod3.png" alt="Шаг 3" /></p>
+
+<p>Для пары "класс-модуль" (<code>A</code>-<code>M2</code>) создался еще один <em>include</em>-класс (<code>iM2*</code>)  и был
+включен в иерархию наследования <code>A</code>.</p>
+
+<h2>Почему Class.class => Class</h2>
+
+<p>Классы <code>BasicObject</code>, <code>Object</code>, <code>Module</code> и <code>Class</code> создаются особенным образом
+(в отличие от других классов) при запуске интерпретатора. Чтобы понять почему
+<code>Class.class</code> это тот же самый <code>Class</code> нужно понять как создаются эти <em>базовые</em> классы.
+Это можно показать на такой диаграмме:</p>
+
+<p><img src="/assets/ruby-base-classes.png" alt="Структура базовых классов в Ruby" /></p>
+
+<p>Здесь видно что для класса <code>(BasicObject)</code> класс <code>Class</code> является суперклассом.
+Если мы вспомним, что вызов <code>Object#class</code> пропускает все <em>singleton</em>-классы, то у нас
+как раз и получится, что выполнив <code>Class.class</code> мы пропустим классы <code>(Class)</code>,
+<code>(Module)</code>, <code>(Object)</code>, <code>(BasicObject)</code> и вернемся к <code>Class</code>. Такая вот магия...</p>
+
+<p>Материал основан на <a href="http://ruby-hacking-guide.github.io/class.html">информации из Ruby Hacking Guide</a>.</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

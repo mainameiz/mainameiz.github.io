@@ -6,9 +6,381 @@
 </description>
     <link>http://mainameiz.com/</link>
     <atom:link href="http://mainameiz.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 14 Oct 2015 03:02:52 +0300</pubDate>
-    <lastBuildDate>Wed, 14 Oct 2015 03:02:52 +0300</lastBuildDate>
+    <pubDate>Sat, 17 Oct 2015 22:37:07 +0300</pubDate>
+    <lastBuildDate>Sat, 17 Oct 2015 22:37:07 +0300</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Наследование в Ruby</title>
+        <description>&lt;h2&gt;Singleton-классы&lt;/h2&gt;
+
+&lt;p&gt;В Ruby есть возможность добавлять объектам &lt;em&gt;singleton&lt;/em&gt;-методы. Это такие методы, которые
+существуют только для одного объекта и не затрагивают другие объекты того же класса.
+Пример определения такого метода:&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Foo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;singleton_method&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;singleton_method&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;В MRI это реализовано так, что в тот момент когда вы хотите создать такой метод,
+в иерархию наследования добавляется специальный класс, который называется &lt;em&gt;singleton&lt;/em&gt;-класс.
+В нем-то и хранятся все методы для данного объекта. От остальных классов он отличается тем, что
+для него установлен специальный флаг, по которому его можно отличить от обычных классов.
+Например, метод &lt;code&gt;Object#class&lt;/code&gt; использует этот флаг для того, чтобы пропускать все &lt;em&gt;singleton&lt;/em&gt;-классы
+в иерархии наследования и в итоге вернуть вам настоящий класс, экзепляром которого и является текущий объект.
+&lt;em&gt;Singleton&lt;/em&gt;-класс можно получить с помощью метода &lt;code&gt;Object#singleton_class&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;На диаграмме наследования это можно показать так... Допустим у нас есть классическая иерархия:
+объект &lt;code&gt;a&lt;/code&gt;, его класс &lt;code&gt;A&lt;/code&gt; и суперкласс &lt;code&gt;B&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/ruby-singleton-class-diagram-without-singleton.png&quot; alt=&quot;Диаграмма наследования без singleton-класса&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;После создания &lt;em&gt;singleton&lt;/em&gt;-метода, наша иерархия будет выглядеть так:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/ruby-singleton-class-diagram-with-singleton.png&quot; alt=&quot;Диаграмма наследования с singleton-классом&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Здесь &lt;code&gt;(a)&lt;/code&gt; это &lt;em&gt;singleton&lt;/em&gt;-класс. В дальнейшем я буду обозначать в скобках &lt;em&gt;singleton&lt;/em&gt;-классы.&lt;/p&gt;
+
+&lt;p&gt;Несколько интересных особенностей связанных с &lt;em&gt;singleton&lt;/em&gt;-классами:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;У объектов классов &lt;code&gt;Fixnum&lt;/code&gt;, &lt;code&gt;Float&lt;/code&gt;, &lt;code&gt;Bignum&lt;/code&gt;, &lt;code&gt;Symbol&lt;/code&gt; не может быть &lt;em&gt;singleton&lt;/em&gt;-классов&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;lol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;lol&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; TypeError: can&amp;#39;t define singleton&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;Нельзя создать экземпляры &lt;em&gt;singleton&lt;/em&gt;-классов&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;string&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; TypeError: can&amp;#39;t create instance of singleton class&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;Нельзя наследоваться от &lt;em&gt;singleton&lt;/em&gt;-класса&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;method&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; TypeError: can&amp;#39;t make subclass of singleton class&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;У объектов &lt;code&gt;nil&lt;/code&gt;, &lt;code&gt;true&lt;/code&gt;, &lt;code&gt;false&lt;/code&gt; нет &lt;em&gt;singleton&lt;/em&gt;-классов, вместо этого вызов метода
+&lt;code&gt;Object#singleton_class&lt;/code&gt; возвращает классы &lt;code&gt;NilClass&lt;/code&gt;, &lt;code&gt;TrueClass&lt;/code&gt; и &lt;code&gt;FalseClass&lt;/code&gt; соответственно.
+Что логично, ведь эти объекты существую в программе в единственном экземпляре и для них не имеет смысла создавать
+ &lt;em&gt;singleton&lt;/em&gt;-классы.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; NilClass&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; TrueClass&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; FalseClass&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Метаклассы&lt;/h2&gt;
+
+&lt;p&gt;Последствиями того, что &quot;всё есть объект&quot; в Ruby является то, что классы тоже являются полноправными объектами.
+А значит у них тоже можно объявлять singleton-методы. В других языках такие методы называют статичными (&lt;em&gt;static method&lt;/em&gt;).
+Не знаю как в других языках, но в Ruby такие методы также как и обычные методы наследуются. Например:&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;8&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;9&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;A&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;foo&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;    &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# напечатает &amp;quot;foo&amp;quot;&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Как вы наверное уже догадались для реализации &lt;em&gt;static&lt;/em&gt;-методов тоже используются &lt;em&gt;singleton&lt;/em&gt;-классы.
+Но для них предусмотрена специальная логика в случаях когда они используются для добавления
+&lt;em&gt;static&lt;/em&gt;-методов в обычные классы. Чтобы отличать их от обычных &lt;em&gt;singleton&lt;/em&gt;-классов
+их также называют метаклассами (т.е. классами для классов).&lt;/p&gt;
+
+&lt;p&gt;Для того, чтобы реализовать наследование &lt;em&gt;static&lt;/em&gt;-методов, необходимо как-то объединить
+метаклассы &lt;code&gt;(A)&lt;/code&gt; и &lt;code&gt;(B)&lt;/code&gt; в иерархии наследования.
+И вот как эта иерархия выглядит:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/ruby-metaclass-hierarchy.png&quot; alt=&quot;Диаграмма наследования A и B&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;На диаграмме вертикально показана иерархия наследования, а горизонтально отношение &quot;объект &lt;-&gt; класс&quot;.
+Т.е. метаклассы &lt;code&gt;(A)&lt;/code&gt; и &lt;code&gt;(B)&lt;/code&gt; являются экземплярами класса &lt;code&gt;Class&lt;/code&gt;, а классы &lt;code&gt;A&lt;/code&gt; и &lt;code&gt;B&lt;/code&gt; какбы являются экземплярами
+своих метаклассов  &lt;code&gt;(A)&lt;/code&gt; и &lt;code&gt;(B)&lt;/code&gt;. При этом, как &lt;code&gt;A&lt;/code&gt; является суперклассом для &lt;code&gt;B&lt;/code&gt;, так и &lt;code&gt;(A)&lt;/code&gt;
+является суперклассом для &lt;code&gt;(B)&lt;/code&gt;. Поэтому когда мы вызываем &lt;em&gt;static&lt;/em&gt;-метод у класса &lt;code&gt;B&lt;/code&gt;, то поиск идет сначала
+в таблице методов класса &lt;code&gt;(B)&lt;/code&gt; и если его там нет, то в его суперклассе &lt;code&gt;(A)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Include-классы&lt;/h2&gt;
+
+&lt;p&gt;Include-классы используются при добавлении модулей в классы. Они связывают между собой
+конктретный класс и методы из модуля. При этом, таблица методов модуля становится также и
+таблицей методов для &lt;em&gt;include&lt;/em&gt;-класса. Из-за этого, при добавлении новых методов
+в модуль, они сразу становятся доступны и всем классам, включившим в себя этот модуль.&lt;/p&gt;
+
+&lt;p&gt;Вот как такой код...&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;... выглядит на диаграмме:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/ruby-include-class-inheritance.png&quot; alt=&quot;Диаграмма include-класса&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Заслуживающей внимания особенностью также является тот факт, что если в родительский класс
+уже включен модуль (&lt;code&gt;M&lt;/code&gt;), то при попытке включить этот же
+модуль (&lt;code&gt;M&lt;/code&gt;) в классе-наследнике, то он &lt;strong&gt;не будет&lt;/strong&gt; добавлен еще раз:&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;8&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;9&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;10&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;11&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;12&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;A&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# включаем второй раз в классе-наследнике&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ancestors&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; [B, A, M, Object, Kernel, BasicObject]&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Также, если после включения модуля (&lt;code&gt;M&lt;/code&gt;) в класс (&lt;code&gt;A&lt;/code&gt;) вы добавили в сам модуль (&lt;code&gt;M&lt;/code&gt;)
+другой модуль (&lt;code&gt;M2&lt;/code&gt;), то класс (&lt;code&gt;A&lt;/code&gt;) не получит новые методы:&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;8&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;9&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;10&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;11&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;12&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;M2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;A&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;M2&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ancestors&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; [A, M, Object, Kernel, BasicObject]&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;В данном случае необходимо &quot;пере-include-ить&quot; все модули, чтобы изменения применились.&lt;/p&gt;
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ancestors&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; [A, M, M2, Object, Kernel, BasicObject]&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Это происходит из-за того, что в Ruby нет отслеживания зависимостей.&lt;/p&gt;
+
+&lt;p&gt;Вот что происходит в данном случае...&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Мы определили класс &lt;code&gt;A&lt;/code&gt; и влючили в него модуль &lt;code&gt;M&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;A&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;/assets/ruby-include-mod1.png&quot; alt=&quot;Шаг 1&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Затем включили второй модуль &lt;code&gt;M2&lt;/code&gt; в первый &lt;code&gt;M&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;8&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;9&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;A&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;M2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;M2&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;/assets/ruby-include-mod2.png&quot; alt=&quot;Шаг 2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;На данном шаге в классе &lt;code&gt;A&lt;/code&gt; еще недоступны методы модуля &lt;code&gt;M2&lt;/code&gt;. Чтобы они стали доступны,
+в иерархии наследования класса &lt;code&gt;A&lt;/code&gt; должен появится &lt;em&gt;include&lt;/em&gt;-класс, который бы связывал
+модуль &lt;code&gt;M2&lt;/code&gt; с классом. Поэтому мы должны еще раз включить модуль &lt;code&gt;M&lt;/code&gt; в класс, чтобы
+еще раз пройтись по всему дереву зависимостей и включить недостающие модули в иерархию наследования класса.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Подключаем модуль еще раз&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;div class=&#39;bogus-wrapper&#39;&gt;&lt;notextile&gt;&lt;figure class=&#39;code&#39;&gt;&lt;figcaption&gt;&lt;span&gt;&lt;/span&gt;&lt;/figcaption&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre class=&quot;line-numbers&quot;&gt;&lt;span class=&#39;line-number&#39;&gt;1&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;2&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;3&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;4&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;5&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;6&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;7&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;8&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;9&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;10&lt;/span&gt;
+&lt;span class=&#39;line-number&#39;&gt;11&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#39;code&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;A&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;M2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;M2&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;
+&lt;/span&gt;&lt;span class=&#39;line&#39;&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;&lt;/figure&gt;&lt;/notextile&gt;&lt;/div&gt;
+
+
+&lt;p&gt;И получаем такую картину:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/ruby-include-mod3.png&quot; alt=&quot;Шаг 3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Для пары &quot;класс-модуль&quot; (&lt;code&gt;A&lt;/code&gt;-&lt;code&gt;M2&lt;/code&gt;) создался еще один &lt;em&gt;include&lt;/em&gt;-класс (&lt;code&gt;iM2*&lt;/code&gt;)  и был
+включен в иерархию наследования &lt;code&gt;A&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Почему Class.class =&gt; Class&lt;/h2&gt;
+
+&lt;p&gt;Классы &lt;code&gt;BasicObject&lt;/code&gt;, &lt;code&gt;Object&lt;/code&gt;, &lt;code&gt;Module&lt;/code&gt; и &lt;code&gt;Class&lt;/code&gt; создаются особенным образом
+(в отличие от других классов) при запуске интерпретатора. Чтобы понять почему
+&lt;code&gt;Class.class&lt;/code&gt; это тот же самый &lt;code&gt;Class&lt;/code&gt; нужно понять как создаются эти &lt;em&gt;базовые&lt;/em&gt; классы.
+Это можно показать на такой диаграмме:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/ruby-base-classes.png&quot; alt=&quot;Структура базовых классов в Ruby&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Здесь видно что для класса &lt;code&gt;(BasicObject)&lt;/code&gt; класс &lt;code&gt;Class&lt;/code&gt; является суперклассом.
+Если мы вспомним, что вызов &lt;code&gt;Object#class&lt;/code&gt; пропускает все &lt;em&gt;singleton&lt;/em&gt;-классы, то у нас
+как раз и получится, что выполнив &lt;code&gt;Class.class&lt;/code&gt; мы пропустим классы &lt;code&gt;(Class)&lt;/code&gt;,
+&lt;code&gt;(Module)&lt;/code&gt;, &lt;code&gt;(Object)&lt;/code&gt;, &lt;code&gt;(BasicObject)&lt;/code&gt; и вернемся к &lt;code&gt;Class&lt;/code&gt;. Такая вот магия...&lt;/p&gt;
+
+&lt;p&gt;Материал основан на &lt;a href=&quot;http://ruby-hacking-guide.github.io/class.html&quot;&gt;информации из Ruby Hacking Guide&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 17 Oct 2015 22:40:09 +0300</pubDate>
+        <link>http://mainameiz.com/2015/10/17/ruby-inheritance-and-hidden-classes</link>
+        <guid isPermaLink="true">http://mainameiz.com/2015/10/17/ruby-inheritance-and-hidden-classes</guid>
+        
+        
+        <category>ruby</category>
+        
+      </item>
     
       <item>
         <title>Модификаторы доступа в ruby</title>
