@@ -176,6 +176,22 @@ pre > code {
 }
 
 /**
+ * Tables */
+/* line 146, ../_sass/_base.sass */
+th, td {
+  padding: 5px;
+  border: 1px solid #aaa;
+}
+
+/* line 150, ../_sass/_base.sass */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid #aaa;
+  margin-bottom: 15px;
+}
+
+/**
  * Site header */
 /* line 3, ../_sass/_layout.sass */
 .site-header {

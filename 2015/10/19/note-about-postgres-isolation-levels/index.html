@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+
+  <title>Заметка об уровнях изоляции в PostgreSQL</title>
+  <meta name="description" content="Оказывается, что поведение postgres в плане уровней изоляции немного отличается от того, чтоописано в стандарте SQL. Isolation Level   Dirty Read &hellip;">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://mainameiz.com/2015/10/19/note-about-postgres-isolation-levels">
+  <link rel="alternate" type="application/rss+xml" title="Your awesome title" href="http://mainameiz.com/feed.xml" />
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-56392383-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+  <div class="wrapper">
+    <nav class="site-nav">
+
+      <div class="trigger">
+        <a class="page-link" href="/">Главная</a>
+        <a class="page-link" href="/about">Обо мне</a>
+        <a class="page-link" href="/feed.xml">RSS</a>
+      </div>
+
+    </nav>
+  </div>
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Заметка об уровнях изоляции в PostgreSQL</h1>
+    <p class="post-meta">Oct 19, 2015</p>
+  </header>
+
+  <article class="post-content">
+    <p>Оказывается, что поведение postgres в плане уровней изоляции немного отличается от того, что
+описано в стандарте SQL.</p>
+
+<table>
+<thead>
+<tr>
+<th> Isolation Level  </th>
+<th> Dirty Read   </th>
+<th> Nonrepeatable Read </th>
+<th> Phantom Read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> Read uncommitted </td>
+<td> Possible     </td>
+<td> Possible           </td>
+<td> Possible</td>
+</tr>
+<tr>
+<td> Read committed   </td>
+<td> Not possible </td>
+<td> Possible           </td>
+<td> Possible</td>
+</tr>
+<tr>
+<td> Repeatable read  </td>
+<td> Not possible </td>
+<td> Not possible       </td>
+<td> Possible</td>
+</tr>
+<tr>
+<td> Serializable     </td>
+<td> Not possible </td>
+<td> Not possible       </td>
+<td> Not possible</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Во-первых, в <em>postgres</em> на самом деле только три уровня изоляции: <em>read committed</em>,
+<em>repeatable read</em> и <em>serializable</em>, а <em>read uncommitted</em> является синонимом <em>read committed</em>.
+А во-вторых, <em>repeatable read</em> предоставляет более строгие гарантии и не допускает
+<em>phantom read</em>.</p>
+
+<p>В итоге получается вот такая таблица:</p>
+
+<table>
+<thead>
+<tr>
+<th> Isolation Level  </th>
+<th> Dirty Read   </th>
+<th> Nonrepeatable Read </th>
+<th> Phantom Read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> Read uncommitted </td>
+<td> Not possible </td>
+<td> Possible           </td>
+<td> Possible</td>
+</tr>
+<tr>
+<td> Read committed   </td>
+<td> Not possible </td>
+<td> Possible           </td>
+<td> Possible</td>
+</tr>
+<tr>
+<td> Repeatable read  </td>
+<td> Not possible </td>
+<td> Not possible       </td>
+<td> Not possible</td>
+</tr>
+<tr>
+<td> Serializable     </td>
+<td> Not possible </td>
+<td> Not possible       </td>
+<td> Not possible</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>При этом отличие между <em>repeatable read</em> и <em>serializable</em> заключается в том, что
+<em>serializable</em> гарантирует, что ваши транзакции будут выполнены так, как будто они выполняются последовательно,
+и если это не так, то одна из транзакций будет отклонена. Подробности тут
+<a href="http://www.postgresql.org/docs/9.4/static/transaction-iso.html">http://www.postgresql.org/docs/9.4/static/transaction-iso.html</a>.</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

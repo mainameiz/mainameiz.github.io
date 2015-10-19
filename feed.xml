@@ -6,9 +6,111 @@
 </description>
     <link>http://mainameiz.com/</link>
     <atom:link href="http://mainameiz.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 17 Oct 2015 22:57:39 +0300</pubDate>
-    <lastBuildDate>Sat, 17 Oct 2015 22:57:39 +0300</lastBuildDate>
+    <pubDate>Tue, 20 Oct 2015 00:13:05 +0300</pubDate>
+    <lastBuildDate>Tue, 20 Oct 2015 00:13:05 +0300</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Заметка об уровнях изоляции в PostgreSQL</title>
+        <description>&lt;p&gt;Оказывается, что поведение postgres в плане уровней изоляции немного отличается от того, что
+описано в стандарте SQL.&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt; Isolation Level  &lt;/th&gt;
+&lt;th&gt; Dirty Read   &lt;/th&gt;
+&lt;th&gt; Nonrepeatable Read &lt;/th&gt;
+&lt;th&gt; Phantom Read&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt; Read uncommitted &lt;/td&gt;
+&lt;td&gt; Possible     &lt;/td&gt;
+&lt;td&gt; Possible           &lt;/td&gt;
+&lt;td&gt; Possible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt; Read committed   &lt;/td&gt;
+&lt;td&gt; Not possible &lt;/td&gt;
+&lt;td&gt; Possible           &lt;/td&gt;
+&lt;td&gt; Possible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt; Repeatable read  &lt;/td&gt;
+&lt;td&gt; Not possible &lt;/td&gt;
+&lt;td&gt; Not possible       &lt;/td&gt;
+&lt;td&gt; Possible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt; Serializable     &lt;/td&gt;
+&lt;td&gt; Not possible &lt;/td&gt;
+&lt;td&gt; Not possible       &lt;/td&gt;
+&lt;td&gt; Not possible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+&lt;p&gt;Во-первых, в &lt;em&gt;postgres&lt;/em&gt; на самом деле только три уровня изоляции: &lt;em&gt;read committed&lt;/em&gt;,
+&lt;em&gt;repeatable read&lt;/em&gt; и &lt;em&gt;serializable&lt;/em&gt;, а &lt;em&gt;read uncommitted&lt;/em&gt; является синонимом &lt;em&gt;read committed&lt;/em&gt;.
+А во-вторых, &lt;em&gt;repeatable read&lt;/em&gt; предоставляет более строгие гарантии и не допускает
+&lt;em&gt;phantom read&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;В итоге получается вот такая таблица:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt; Isolation Level  &lt;/th&gt;
+&lt;th&gt; Dirty Read   &lt;/th&gt;
+&lt;th&gt; Nonrepeatable Read &lt;/th&gt;
+&lt;th&gt; Phantom Read&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt; Read uncommitted &lt;/td&gt;
+&lt;td&gt; Not possible &lt;/td&gt;
+&lt;td&gt; Possible           &lt;/td&gt;
+&lt;td&gt; Possible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt; Read committed   &lt;/td&gt;
+&lt;td&gt; Not possible &lt;/td&gt;
+&lt;td&gt; Possible           &lt;/td&gt;
+&lt;td&gt; Possible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt; Repeatable read  &lt;/td&gt;
+&lt;td&gt; Not possible &lt;/td&gt;
+&lt;td&gt; Not possible       &lt;/td&gt;
+&lt;td&gt; Not possible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt; Serializable     &lt;/td&gt;
+&lt;td&gt; Not possible &lt;/td&gt;
+&lt;td&gt; Not possible       &lt;/td&gt;
+&lt;td&gt; Not possible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+&lt;p&gt;При этом отличие между &lt;em&gt;repeatable read&lt;/em&gt; и &lt;em&gt;serializable&lt;/em&gt; заключается в том, что
+&lt;em&gt;serializable&lt;/em&gt; гарантирует, что ваши транзакции будут выполнены так, как будто они выполняются последовательно,
+и если это не так, то одна из транзакций будет отклонена. Подробности тут
+&lt;a href=&quot;http://www.postgresql.org/docs/9.4/static/transaction-iso.html&quot;&gt;http://www.postgresql.org/docs/9.4/static/transaction-iso.html&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 19 Oct 2015 23:02:11 +0300</pubDate>
+        <link>http://mainameiz.com/2015/10/19/note-about-postgres-isolation-levels</link>
+        <guid isPermaLink="true">http://mainameiz.com/2015/10/19/note-about-postgres-isolation-levels</guid>
+        
+        
+        <category>databases</category>
+        
+      </item>
     
       <item>
         <title>Наследование в Ruby</title>
